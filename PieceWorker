@@ -1,0 +1,44 @@
+package HW1;
+
+public class PieceWorker extends Employee
+{
+	
+	private double wages;
+	private double pieces;
+
+	public PieceWorker(String first, String last, String ssn, 
+			int birth_month, int birth_day, int birth_year,
+			int join_month, int join_day, int join_year, 
+			double pieceWages, double piece) 
+	{
+		super(first, last, ssn, birth_month, birth_day, birth_year, join_month, join_day, join_year);
+		setWages( pieceWages );
+	    setPiece( piece );
+		// TODO Auto-generated constructor stub
+	}
+	
+	public void setWages(double pieceWages){
+		wages = pieceWages < 0.0 ? 0.0 : pieceWages;
+	}
+	public double getWages() {
+		return wages;
+	}
+	public void setPiece(double piece) {
+		pieces = piece < 0 ? 0 : piece;
+	}
+
+	public double getPiece() {
+		return pieces;
+	}
+	@Override
+	public double earnings() {
+		return getWages() * getPiece();
+	}
+	@Override
+	public String toString() {
+		return String.format( "Piece Worker: %s\n%s: $%,.2f; %s: %,.2f", 
+		         super.toString(), "Wages", getWages(), 
+		         "Piece", getPiece() );
+	}
+
+}
