@@ -1,0 +1,91 @@
+package HW1;
+
+public abstract class Employee 
+{
+   private String firstName;
+   private String lastName;
+   private String socialSecurityNumber;
+   private Date birthDate;
+   private Date JoinDate;
+
+   // six-argument constructor
+   public Employee( String first, String last, String ssn, 
+      int birth_month, int birth_day, int birth_year, int join_month, int join_day, int join_year)
+   {
+      firstName = first;
+      lastName = last;
+      socialSecurityNumber = ssn;
+      birthDate = new Date( birth_month, birth_day, birth_year );
+      JoinDate = new Date(join_month, join_day, join_year);
+   } // end six-argument Employee constructor
+
+   // set first name
+   public void setFirstName( String first )
+   {
+      firstName = first;
+   } // end method setFirstName
+
+   // return first name
+   public String getFirstName()
+   {
+      return firstName;
+   } // end method getFirstName
+
+   // set last name
+   public void setLastName( String last )
+   {
+      lastName = last;
+   } // end method setLastName
+
+   // return last name
+   public String getLastName()
+   {
+      return lastName;
+   } // end method getLastName
+
+   // set social security number
+   public void setSocialSecurityNumber( String ssn )
+   {
+      socialSecurityNumber = ssn;  // should validate
+   } // end method setSocialSecurityNumber
+
+   // return social security number
+   public String getSocialSecurityNumber()
+   {
+      return socialSecurityNumber;
+   } // end method getSocialSecurityNumber
+
+   // set birth date
+   public void setBirthDate( int month, int day, int year )
+   {
+      birthDate = new Date( month, day, year );
+   } // end method setBirthDate
+
+   // return birth date
+   public Date getBirthDate()
+   {
+      return birthDate;
+   } // end method getBirthDate
+
+   // return String representation of Employee object
+   
+   public void setJoinDate(int month, int day, int year) {
+	   JoinDate = new Date(month, day, year);
+   }
+   
+   public Date getJoinDate() {
+	   return JoinDate;
+   }
+   @Override
+   public String toString()
+   {
+      return String.format( "%s %s\n%s: %s\n%s: %s\n%s: %s", 
+         getFirstName(), getLastName(), 
+         "social security number", getSocialSecurityNumber(), 
+         "birth date", getBirthDate(),
+         "Join date", getJoinDate());
+   } // end method toString
+
+   // abstract method overridden by subclasses
+   public abstract double earnings();
+} // end abstract class Employee
