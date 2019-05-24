@@ -1,0 +1,133 @@
+package HW1;
+
+import java.util.Scanner; // program uses Scanner to obtain user input
+
+public class PayrollSystemTest 
+{
+	public static void main( String[] args ) 
+	{
+		// create subclass objects
+		SalariedEmployee salariedEmployee1 = 
+				new SalariedEmployee( 
+						"John", "Smith", "111-11-1111", 6, 15, 1944, 6,15,1999, 800.00 );
+		HourlyEmployee hourlyEmployee1 = 
+				new HourlyEmployee( 
+						"Karen", "Price", "222-22-2222", 12, 29, 1960, 12,29,2010, 16.75, 40 );
+		CommissionEmployee commissionEmployee1 = 
+				new CommissionEmployee( 
+						"Sue", "Jones", "333-33-3333", 9, 8, 1954, 10, 8, 1990, 10000, .06 );
+		BasePlusCommissionEmployee basePlusCommissionEmployee1 = 
+				new BasePlusCommissionEmployee( 
+						"Bob", "Lewis", "444-44-4444", 3, 2, 1965, 3, 2, 2009, 5000, .04, 300 );
+		SalariedEmployee salariedEmployee2 = 
+				new SalariedEmployee( 
+						"James", "Smith", "555-55-5555", 6, 1, 1970, 6,15,2003, 600.00 );
+		HourlyEmployee hourlyEmployee2 = 
+				new HourlyEmployee( 
+						"Karry", "Bond", "666-66-6666", 12, 2, 1967, 1,2,2001, 10.75, 60 );
+		CommissionEmployee commissionEmployee2 = 
+				new CommissionEmployee( 
+						"Susie", "Kim", "777-77-7777", 10, 18, 1988, 12, 8, 1997, 9500, 0.08 );
+		BasePlusCommissionEmployee basePlusCommissionEmployee2 = 
+				new BasePlusCommissionEmployee( 
+						"Bobby", "Lee", "888-88-8888", 3, 25, 1975, 3, 12, 2012, 7000, .03, 250 );
+		CommissionEmployee commissionEmployee3 = 
+				new CommissionEmployee( 
+						"Sally", "Hong", "999-99-9999", 7, 18, 1980, 11, 28, 1999, 12000, .05 );
+		BasePlusCommissionEmployee basePlusCommissionEmployee3 = 
+				new BasePlusCommissionEmployee( 
+						"Daisy", "Lewis", "000-00-0000", 3, 3, 1990, 3, 22, 2015, 4000, .03, 350 );
+
+		System.out.println( "Employees processed individually:\n" );
+
+		// create four-element Employee array
+		Employee[] employees = new Employee[ 10 ]; 
+
+		// initialize array with Employees
+		employees[ 0 ] = salariedEmployee1;
+		employees[ 1 ] = hourlyEmployee1;
+		employees[ 2 ] = commissionEmployee1; 
+		employees[ 3 ] = basePlusCommissionEmployee1;
+		employees[ 4 ] = salariedEmployee2;
+		employees[ 5 ] = hourlyEmployee2;
+		employees[ 6 ] = commissionEmployee2; 
+		employees[ 7 ] = basePlusCommissionEmployee2;
+		employees[ 8 ] = commissionEmployee3; 
+		employees[ 9 ] = basePlusCommissionEmployee3;
+
+		for (int i=0;i<10;i++) {
+			System.out.printf( "%s\n%s: $%,.2f\n\n", 
+					employees[i], "earned",  employees[i].earnings() );
+		}
+
+		Scanner input = new Scanner( System.in ); // to get current month
+		int currentMonth;
+		int currentYear;
+
+		// get and validate current month
+		do
+		{
+			System.out.print( "Enter the current month (1 - 12): " );
+			currentMonth = input.nextInt();
+			System.out.println();
+		} while ( ( currentMonth < 1 ) || ( currentMonth > 12 ) );
+		do
+		{
+			System.out.print( "Enter the current Year : " );
+			currentYear = input.nextInt();
+			System.out.println();
+		} while ( ( currentYear < 2015 ));
+
+		System.out.println( "Employees processed polymorphically:\n" );
+
+		// generically process each element in array employees
+		for ( Employee currentEmployee : employees ) 
+		{
+			System.out.println( currentEmployee ); // invokes toString
+
+			// determine whether element is a BasePlusCommissionEmployee
+			if ( currentEmployee instanceof BasePlusCommissionEmployee ) 
+			{
+				// downcast Employee reference to 
+				// BasePlusCommissionEmployee reference
+				BasePlusCommissionEmployee employee = 
+						( BasePlusCommissionEmployee ) currentEmployee;
+
+				double oldBaseSalary = employee.getBaseSalary();
+				employee.setBaseSalary( 1.10 * oldBaseSalary );
+				System.out.printf( 
+						"new base salary with 10%% increase is: $%,.2f\n",
+						employee.getBaseSalary() );
+			} // end if
+
+			double Earning=currentEmployee.earnings();
+			double MonthlySalary = Earning * 5;
+
+			// if month of employee's birthday, add $100 to salary
+			System.out.printf( 
+					"earned $%,.2f in a week, $%,.2f in a month\n", Earning, MonthlySalary );
+			if ( currentMonth == currentEmployee.getBirthDate().getMonth() ) {
+				System.out.printf( 
+						"$100.00 birthday bonus\n");
+				if ( currentYear >= currentEmployee.getJoinDate().getYear() + 10) {
+					double TenYearsBonus = MonthlySalary *0.10;
+					MonthlySalary+= TenYearsBonus;
+					System.out.printf( 
+							"10%% increase of More than 10 years of employment: $%,.2f\n",
+							TenYearsBonus );
+				}
+				MonthlySalary += 100.00;
+			}
+			if(MonthlySalary > Earning*5)
+				System.out.printf( 
+						"Total: $%,.2f\n\n", MonthlySalary);
+			else
+				System.out.println();
+		} // end for
+
+		// get type name of each object in employees array
+		for ( int j = 0; j < employees.length; j++ )
+			System.out.printf( "Employee %d is a %s\n", j, 
+					employees[ j ].getClass().getName() ); 
+	} // end main
+} // end class PayrollSystemTest
