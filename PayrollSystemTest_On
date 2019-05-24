@@ -1,0 +1,207 @@
+package HW3;
+
+import java.util.Scanner; // program uses Scanner to obtain user input
+
+public class PayrollSystemTest
+{	
+	 private static void swap(Object[] a, int i, int j)
+	   {
+	      Object temp = a[i];
+	      a[i] = a[j];
+	      a[j] = temp; 
+	   } // end swap
+	 
+	public static <T extends Comparable<? super T>> 
+		void insertionSort(T[] a, int first, int last) 
+	{
+		if (first < last) {
+			insertionSort(a, first, last-1);
+			insertInOrder(a[last],a,first,last-1);
+		}
+	}
+
+	public static <T extends Comparable<? super T>> 
+		void insertInOrder(T entry, T[] a, int first, int last) 
+	{
+		if (entry.compareTo(a[last])>=0) {
+			a[last+1]=entry;
+		}
+		else if (first<last) {
+			a[last+1]=a[last];
+			insertInOrder(entry, a, first, last-1);
+
+		}
+		else {
+			a[last+1] = a[last];
+			a[last]=entry;
+		}
+	}
+	
+	public static <T extends Comparable<? super T>>
+	void quickSort(T[] a, int first, int last)
+	{
+		if (first<last) {
+			// Create the partition: Smaller | Pivot | Larger
+			int pivotIndex = partition(a, first, last);
+			// Sort subarrays Smaller and Larger
+			quickSort(a, first, pivotIndex - 1);
+			quickSort(a, pivotIndex + 1, last);
+		} // end if
+	} // end quickSort
+	public static <T extends Comparable<? super T>> 
+	void sortFirstMidLast(T[] a, int first,int mid, int last) {
+		if (a[first].compareTo(a[last])>0 ) swap(a,first,last);
+		if (a[first].compareTo(a[mid]) > 0) swap(a,first,mid);
+		
+	}
+	public static <T extends Comparable<? super T>> 
+		int partition(T[] a, int left, int right) 
+	{
+		int pivotIndex = (left + right) / 2;
+		T pivot = a[pivotIndex];
+		while (left < right) {
+			while ((a[left].compareTo(pivot)<0) && (left < right))
+				left++;
+			while ((a[right].compareTo(pivot)>0) && (left < right))
+				right--;
+
+			if (left < right) {
+				T temp = a[left];
+				a[left] = a[right];
+				a[right] = temp;
+			}
+		}
+
+		return left;
+
+	}
+	public static void main( String[] args ) 
+	{
+		// create subclass objects
+
+
+		System.out.println( "How many Employees :" );
+
+		Scanner input = new Scanner( System.in );
+
+		int n = input.nextInt();
+
+		// create four-element Employee array
+		Employee[] employees = new Employee[ n ]; 
+
+		// initialize array with Employees
+		for (int i=0; i<n ; i++) {
+			//employees[ i ] = new SalariedEmployee("NULL", "NULL", "NULL", 6, 15, 1944, 6,15,1999, 800.00 ,i);
+			employees[i]=new SalariedEmployee(i);
+		}
+
+		for (int i=0; i<n; i++){
+			Employee temp;
+
+			int r = (int)(Math.random()*employees.length);
+			if(i!=r){
+				temp = employees[i];
+				employees[i] = employees[r];
+				employees[r] = temp;
+			}
+		}
+		
+		Employee[] employees2 = new Employee[n];
+		for (int i=0; i<n; i++) {
+			employees2[i]=employees[i];
+		} 
+		System.out.printf("--insertion Sorting--\n");		
+
+		long startTime = System.currentTimeMillis();
+
+		insertionSort(employees,0,n-1);
+		long endTime = System.currentTimeMillis();
+		long elaspedTime = endTime - startTime;
+
+		System.out.printf("Time taken to process %d inputs: %d\n\n",n, elaspedTime);
+		
+		
+		System.out.printf("--quickSorting--\n");		
+
+		startTime = System.currentTimeMillis();
+
+		quickSort(employees,0,n-1);
+		endTime = System.currentTimeMillis();
+		elaspedTime = endTime - startTime;
+
+		System.out.printf("Time taken to process %d inputs: %d\n\n",n,elaspedTime);
+
+		
+		int currentMonth;
+		int currentYear;
+
+		
+		// get and validate current month
+		do
+		{
+			System.out.print( "Enter the current month (1 - 12): " );
+			currentMonth = input.nextInt();
+			System.out.println();
+		} while ( ( currentMonth < 1 ) || ( currentMonth > 12 ) );
+		do
+		{
+			System.out.print( "Enter the current Year : " );
+			currentYear = input.nextInt();
+			System.out.println();
+		} while ( ( currentYear < 2015 ));
+
+		System.out.println( "Employees processed polymorphically:\n" );
+
+		// generically process each element in array employees
+		for ( Employee currentEmployee : employees ) 
+		{
+			System.out.println( currentEmployee ); // invokes toString
+
+			// determine whether element is a BasePlusCommissionEmployee
+			if ( currentEmployee instanceof BasePlusCommissionEmployee ) 
+			{
+				// downcast Employee reference to 
+				// BasePlusCommissionEmployee reference
+				BasePlusCommissionEmployee employee = 
+						( BasePlusCommissionEmployee ) currentEmployee;
+
+				double oldBaseSalary = employee.getBaseSalary();
+				employee.setBaseSalary( 1.10 * oldBaseSalary );
+				System.out.printf( 
+						"new base salary with 10%% increase is: $%,.2f\n",
+						employee.getBaseSalary() );
+			} // end if
+
+			double Earning=currentEmployee.earnings();
+			double MonthlySalary = Earning * 5;
+
+			// if month of employee's birthday, add $100 to salary
+			System.out.printf( 
+					"earned $%,.2f in a week, $%,.2f in a month\n", Earning, MonthlySalary );
+			if ( currentMonth == currentEmployee.getBirthDate().getMonth() ) {
+				System.out.printf( 
+						"$100.00 birthday bonus\n");
+				if ( currentYear >= currentEmployee.getJoinDate().getYear() + 10) {
+					double TenYearsBonus = MonthlySalary *0.10;
+					MonthlySalary+= TenYearsBonus;
+					System.out.printf( 
+							"10%% increase of More than 10 years of employment: $%,.2f\n",
+							TenYearsBonus );
+				}
+				MonthlySalary += 100.00;
+			}
+			if(MonthlySalary > Earning*5)
+				System.out.printf( 
+						"Total: $%,.2f\n\n", MonthlySalary);
+			else
+				System.out.println();
+		} // end for
+
+		// get type name of each object in employees array
+		for ( int j = 0; j < employees.length; j++ )
+			System.out.printf( "Employee %d is a %s\n", j, 
+					employees[ j ].getClass().getName() ); 
+		 
+	} // end main 
+
+} // end class PayrollSystemTest
